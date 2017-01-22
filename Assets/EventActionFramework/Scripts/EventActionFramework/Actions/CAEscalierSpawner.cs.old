@@ -1,0 +1,61 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class CAEscalierSpawner : CustomActionScript {
+
+	public Transform _relativeTransform = null;
+
+	public bool _makeRelativeTransformParent = false;
+
+	public bool _relativePosition = false;
+
+	public Vector3 _position = Vector3.zero;
+
+	public bool _relativeRotation = false;
+
+	public Quaternion _rotation = Quaternion.identity;
+
+	public GameObject _prefab;
+
+	public override IEnumerator DoActionOnEvent (MonoBehaviour sender, GameObject args)
+	{
+		Debug.Log(transform);
+		Vector3 originPosition = transform.position;
+		Vector3 spawnPosition = originPosition;
+		spawnPosition.y = spawnPosition.y - 7;
+		spawnPosition.x = spawnPosition.x - 8;
+
+		var daddy = transform.parent;
+		var forNext = daddy.Find("originForNext");
+		var origin = forNext.position;
+		Debug.Log(origin);
+		yield return new WaitForFixedUpdate();
+		if (_prefab != null)
+		{
+			var newGO = (GameObject) GameObject.Instantiate(_prefab,
+			                                                spawnPosition,
+			                                                _relativeRotation && _relativeTransform != null ?
+			                                                _relativeTransform.rotation * _rotation :
+			                                                _rotation
+			                                                );
+			newGO.transform.parent = _makeRelativeTransformParent ? _relativeTransform : null;
+
+			int de = Random.Range(1,3);
+
+			if (de == 1)
+			{
+				//newGO.transform.Rotate(0,90,0);
+			}
+
+			//if (de == 2)
+
+			if (de == 3)
+			{
+				//newGO.transform.Rotate(0,-90,0);
+			}
+
+		}
+
+		yield return null;
+	}
+}
